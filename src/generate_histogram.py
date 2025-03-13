@@ -7,9 +7,7 @@ token = os.getenv('GITHUB_TOKEN')
 
 # List of repositories to analyze
 repositories = [
-    "ainhprzz/BetterHealthProject",
-    "DiogoPires2003/JoinProject",
-    "ruxailab/web-eye-tracker-front"
+    "ruxailab/web-eye-tracker-front"  # Add other repositories here if needed
 ]
 
 # Authenticate with GitHub API
@@ -27,7 +25,7 @@ def generate_plot(repo_name, labels_count):
     """Generate and save a histogram of issue labels for a given repository."""
     if not labels_count:
         print(f"No labeled issues found in {repo_name}.")
-        return
+        return None  # Return None if no issues found
 
     plt.figure(figsize=(10, 6))
     plt.bar(labels_count.keys(), labels_count.values(), color='b')
@@ -37,11 +35,12 @@ def generate_plot(repo_name, labels_count):
     plt.xticks(rotation=30, ha='right')
     plt.yticks(range(0, max(labels_count.values()) + 1))
     plt.tight_layout()
-    
-    # Save the plot
+
+    # Save the plot with a consistent name
     filename = f"{repo_name.replace('/', '_')}_histogram.png"
     plt.savefig(filename)
     print(f"Histogram saved as {filename}")
+    return filename  # Return the filename
 
 def main():
     for repo_name in repositories:
@@ -49,7 +48,9 @@ def main():
             repo = g.get_repo(repo_name)
             print(f"Processing repository: {repo_name}")
             labels_count = count_labels(repo)
-            generate_plot(repo_name, labels_count)
+            filename = generate_plot(repo_name, labels_count)
+            if filename:
+                print(f"Histogram file created: {filename}")
         except Exception as e:
             print(f"Error processing {repo_name}: {e}")
 
