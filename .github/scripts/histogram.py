@@ -6,7 +6,7 @@ import os
 token = os.getenv('GITHUB_TOKEN')
 
 # List of repositories to analyze
-repositories = ["gilito11/BetterHealth4"]
+repositories = ["username/repository"]
 
 # Authenticate with GitHub API
 g = Github(token)
