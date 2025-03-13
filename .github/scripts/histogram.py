@@ -6,15 +6,13 @@ import os
 token = os.getenv('GITHUB_TOKEN')
 
 # List of repositories to analyze
-repositories = [
-    "ruxailab/web-eye-tracker-front"  # Add other repositories here if needed
-]
+repositories = ["gilito11/BetterHealth4"]
 
 # Authenticate with GitHub API
 g = Github(token)
 
 def count_labels(repo):
-    """Dynamically count the number of issues for each label in a repository."""
+    """Count the number of issues for each label in a repository."""
     labels_count = {}
     for issue in repo.get_issues(state="all"):
         for label in issue.labels:
@@ -22,10 +20,10 @@ def count_labels(repo):
     return labels_count
 
 def generate_plot(repo_name, labels_count):
-    """Generate and save a histogram of issue labels for a given repository."""
+    """Generate and save a histogram of issue labels."""
     if not labels_count:
         print(f"No labeled issues found in {repo_name}.")
-        return None  # Return None if no issues found
+        return None  
 
     plt.figure(figsize=(10, 6))
     plt.bar(labels_count.keys(), labels_count.values(), color='b')
@@ -33,14 +31,12 @@ def generate_plot(repo_name, labels_count):
     plt.xlabel('Labels')
     plt.title(f'Histogram of Issues by Label - {repo_name}')
     plt.xticks(rotation=30, ha='right')
-    plt.yticks(range(0, max(labels_count.values()) + 1))
     plt.tight_layout()
 
-    # Save the plot with a consistent name
     filename = f"{repo_name.replace('/', '_')}_histogram.png"
     plt.savefig(filename)
     print(f"Histogram saved as {filename}")
-    return filename  # Return the filename
+    return filename  
 
 def main():
     for repo_name in repositories:
